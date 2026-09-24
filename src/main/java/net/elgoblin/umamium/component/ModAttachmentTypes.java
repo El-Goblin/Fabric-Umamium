@@ -22,7 +22,7 @@ public class ModAttachmentTypes {
                             )
             );
 
-    public static final AttachmentType<Boolean> ADYACENT_BLOCK_PLACING =
+    public static final AttachmentType<Boolean> MISSCLICK =
             AttachmentRegistry.create(
                     Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "adyacent_block_placing"),
                     builder -> builder

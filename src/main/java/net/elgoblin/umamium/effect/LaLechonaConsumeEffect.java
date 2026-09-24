@@ -37,7 +37,7 @@ public record LaLechonaConsumeEffect() implements ConsumeEffect {
         applyAttributeChange(Attributes.ENTITY_INTERACTION_RANGE, 3, entity);
         applyAttributeChange(Attributes.MINING_EFFICIENCY, 1, entity);
         entity.removeAttached(ModAttachmentTypes.NIGHT_OWL);
-        entity.removeAttached(ModAttachmentTypes.ADYACENT_BLOCK_PLACING);
+        entity.removeAttached(ModAttachmentTypes.MISSCLICK);
         return entity.removeAllEffects();
     }
 

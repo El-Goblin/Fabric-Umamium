@@ -12,35 +12,27 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.fabricmc.fabric.api.event.player.ItemEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityAttachment;
-import net.minecraft.world.entity.EntityAttachments;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.List;
 
 public class UmamiumClient implements ClientModInitializer {
 
-	private long blockPlacedCount = 0;
+	private static final Identifier NIGHT_OWL = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/night_owl.png");
+	private static final Identifier MISSCLICK = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/missclick.png");
 
-	private static final Identifier NIGHT_OWL = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/slimey.png"
-	);
 	private static final Identifier EFFECT_BACKGROUND_AMBIENT_SPRITE = Identifier.withDefaultNamespace("hud/effect_background_ambient");
 	private static final Identifier EFFECT_BACKGROUND_SPRITE = Identifier.withDefaultNamespace("hud/effect_background");
 
@@ -189,11 +181,18 @@ public class UmamiumClient implements ClientModInitializer {
 					LocalPlayer player = minecraft.player;
 			        if (player == null) { return; }
 
-					boolean hasNightOwl = player.hasAttached(ModAttachmentTypes.NIGHT_OWL);
+					List<Identifier> attachmentSpritePaths = getAttachmentSpritePaths(player);
 
-					if (hasNightOwl) {
-						graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EFFECT_BACKGROUND_SPRITE, 5, 5, 24, 24);
-						graphics.blit(RenderPipelines.GUI_TEXTURED, NIGHT_OWL, 5, 5, 0, 0, 24, 24, 24, 24);
+					Screen screen = minecraft.gui.screen();
+
+					if (!(screen instanceof CreativeModeInventoryScreen) && !(screen instanceof InventoryScreen)) {
+						int x = graphics.guiWidth();
+						int y = 53;
+						for (Identifier sprite : attachmentSpritePaths) {
+							x -= 25;
+							graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EFFECT_BACKGROUND_SPRITE, x, y, 24, 24);
+							graphics.blit(RenderPipelines.GUI_TEXTURED, sprite, x+3, y+3, 0, 0, 18, 18, 18, 18);
+						}
 					}
 				});
 	}
@@ -241,7 +240,29 @@ public class UmamiumClient implements ClientModInitializer {
 		}
 	}
 
-//	private boolean showInGui(EntityAttachment attachment) {
-//		return attachment
-//	}
+	public static List<Identifier> getAttachmentSpritePaths(LocalPlayer player) {
+		List<Identifier> attachmentSpritePaths = new ArrayList<>();
+
+		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {
+			attachmentSpritePaths.add(NIGHT_OWL);
+		}
+		if (player.hasAttached(ModAttachmentTypes.MISSCLICK)) {
+			attachmentSpritePaths.add(MISSCLICK);
+		}
+
+		return attachmentSpritePaths;
+	}
+
+	public static List<Component> getAttachmentNames(LocalPlayer player) {
+		List<Component> attachmentNames = new ArrayList<>();
+
+		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {
+			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".night_owl"));
+		}
+		if (player.hasAttached(ModAttachmentTypes.MISSCLICK)) {
+			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".missclick"));
+		}
+
+		return attachmentNames;
+	}
 }

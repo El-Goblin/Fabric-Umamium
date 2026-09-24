@@ -297,6 +297,13 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 // AMETHYST
 
                 generateSetRecipes(ModBlocks.AMETHYST_SET);
+                shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.AMETHYST_SET.door(), 1)
+                        .pattern("##")
+                        .pattern("##")
+                        .pattern("##")
+                        .define('#', Items.AMETHYST_SHARD)
+                        .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD))
+                        .save(output);
 //                shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.AMETHYST_SET.trapdoor(), 1)
 //                        .pattern("##")
 //                        .pattern("##")

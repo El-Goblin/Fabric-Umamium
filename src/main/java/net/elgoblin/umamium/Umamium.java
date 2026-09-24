@@ -25,7 +25,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.ItemEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.resources.Identifier;
 
 import net.minecraft.server.level.ServerLevel;
@@ -50,8 +49,6 @@ public class Umamium implements ModInitializer {
 	public static final String MOD_ID = "umamium";
 	public static final RandomSource random = RandomSource.create();
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-	private Map<UUID, Long> playerToBlockPlacedCount = new HashMap<>();
 
 	@Override
 	public void onInitialize() {
@@ -85,18 +82,20 @@ public class Umamium implements ModInitializer {
 		ItemEvents.USE_ON.register((context -> {
 			Player player = context.getPlayer();
 			if (player == null) { return null; }
-			if (!player.hasAttached(ModAttachmentTypes.ADYACENT_BLOCK_PLACING)) { return null; }
+			if (!player.hasAttached(ModAttachmentTypes.MISSCLICK)) { return null; }
 
 			ItemStack stack = context.getItemInHand();
 			if (!(stack.getItem() instanceof BlockItem blockItem)) { return null; }
 
-			UUID uuid = player.getUUID();
-			long blockPlacedCount = playerToBlockPlacedCount.getOrDefault(uuid, 0L);
-			long seed = uuid.getMostSignificantBits() ^ uuid.getLeastSignificantBits() ^ blockPlacedCount;
-
-			if (!context.getLevel().isClientSide()) {
-				playerToBlockPlacedCount.put(uuid, blockPlacedCount + 1);
-			}
+			long seed = Double.doubleToLongBits(Math.floor(context.getClickLocation().x * 100000))
+							^ Double.doubleToLongBits(Math.floor(context.getClickLocation().y * 100000))
+							^ Double.doubleToLongBits(Math.floor(context.getClickLocation().z * 100000))
+							^ Double.doubleToLongBits(Math.floor(player.getX() * 100000))
+							^ Double.doubleToLongBits(Math.floor(player.getY() * 100000))
+							^ Double.doubleToLongBits(Math.floor(player.getZ() * 100000));
+			seed ^= seed >>> 32;
+			seed *= 0x9E3779B97F4A7C15L;
+			seed ^= seed >>> 29;
 
 			List<Direction> directions = new ArrayList<>(List.of(
 					Direction.DOWN,

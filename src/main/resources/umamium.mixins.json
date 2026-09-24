@@ -29,6 +29,7 @@
   "client": [
     "AbstractContainerScreenMixin",
     "BeaconRendererMixin",
+    "EffectsInInventoryMixin",
     "MinecraftMixin",
     "MouseHandlerMixin"
   ]

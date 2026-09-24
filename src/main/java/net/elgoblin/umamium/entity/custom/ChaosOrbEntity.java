@@ -57,6 +57,7 @@ import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.entity.monster.cubemob.SulfurCube;
 import net.minecraft.world.entity.monster.illager.Illusioner;
 import net.minecraft.world.entity.monster.illager.Pillager;
+import net.minecraft.world.entity.monster.illager.Vindicator;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
@@ -134,7 +135,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             Map.entry("20", new Pair<>(5,2)),
             Map.entry("scale", new Pair<>(5,3)),
             Map.entry("levitation", new Pair<>(5,4)),
-            Map.entry("adyacentblockplacing", new Pair<>(5,5)),
+            Map.entry("missclick", new Pair<>(5,5)),
 //
             Map.entry("help", new Pair<>(6,0))
 //            Map.entry("skyblock", new Pair<>(6,1))
@@ -190,7 +191,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::moveXBlocks,
             this::changeScale,
             this::levitation,
-            this::blocksPlacedOnAdyacentPositions
+            this::missclick
     ));
 
     private List<Consumer<HitResult>> debugChaosEffects = new ArrayList<>(List.of(
@@ -725,14 +726,14 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         }
     }
 
-    private void blocksPlacedOnAdyacentPositions(HitResult hitResult, AABB boundingBox) {
-        sendMessageToUser("Adyacent Block Placing");
+    private void missclick(HitResult hitResult, AABB boundingBox) {
+        sendMessageToUser("Missclick");
         List<ServerPlayer> entities = level.getEntitiesOfClass(ServerPlayer.class, boundingBox.inflate(16.0, 8.0, 16.0), EntitySelector.NO_SPECTATORS);
         addUserTargetsOrSelfServerPlayer(entities, user);
 
         for (ServerPlayer player : entities) {
             if (player != null) {
-                player.setAttached(ModAttachmentTypes.ADYACENT_BLOCK_PLACING, true);
+                player.setAttached(ModAttachmentTypes.MISSCLICK, true);
 
                 player.connection.send(new ClientboundSetTitleTextPacket(
                         Component.literal("Missclick")
@@ -1352,7 +1353,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
 
                 case "minecraft:vindicator":
                     if (entity != null) {
-                        ((Pillager) entity).setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_AXE.getDefaultInstance());
+                        ((Vindicator) entity).setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_AXE.getDefaultInstance());
                     }
                     break;
 
