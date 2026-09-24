@@ -1,6 +1,7 @@
 package net.elgoblin.umamium.entity.custom;
 
 import com.mojang.datafixers.util.Pair;
+import net.elgoblin.umamium.Umamium;
 import net.elgoblin.umamium.block.ModBlocks;
 import net.elgoblin.umamium.component.ModAttachmentTypes;
 import net.elgoblin.umamium.effect.ModEffects;
@@ -33,12 +34,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.attribute.AttributeTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.entity.animal.chicken.ChickenVariant;
@@ -124,6 +127,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             Map.entry("snowybodyguards", new Pair<>(2,1)),
             Map.entry("waterweakness", new Pair<>(2,2)),
             Map.entry("chaoseffect", new Pair<>(2,3)),
+            Map.entry("range", new Pair<>(2,4)),
 
             Map.entry("nightowl", new Pair<>(3,0)),
 //
@@ -136,6 +140,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             Map.entry("scale", new Pair<>(5,3)),
             Map.entry("levitation", new Pair<>(5,4)),
             Map.entry("missclick", new Pair<>(5,5)),
+            Map.entry("manualbreathing", new Pair<>(5,6)),
 //
             Map.entry("help", new Pair<>(6,0))
 //            Map.entry("skyblock", new Pair<>(6,1))
@@ -171,7 +176,8 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::fragile,
             this::snowyBodyguards,
             this::waterWeakness,
-            this::chaosEffect
+            this::chaosEffect,
+            this::increaseInteractionRange
     ));
     private List<Consumer<HitResult>> selfChaosEffects = new ArrayList<>(List.of(
             this::nightOwl
@@ -191,7 +197,8 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::moveXBlocks,
             this::changeScale,
             this::levitation,
-            this::missclick
+            this::missclick,
+            this::manualBreathing
     ));
 
     private List<Consumer<HitResult>> debugChaosEffects = new ArrayList<>(List.of(
@@ -460,7 +467,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         List<Entity> entities = level.getEntitiesOfClass(Entity.class, boundingBox.inflate(32.0, 32.0, 32.0),
                 entity -> !(entity.is(EntityTypes.ITEM_FRAME)) && !(entity.is(EntityTypes.ITEM)));
 
-        double knockback = 10;
+        double knockback = 15;
 
         double chaosOrbX = this.getX();
         double chaosOrbY = this.getY();
@@ -694,6 +701,23 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         }
     }
 
+    private void manualBreathing(HitResult hitResult, AABB boundingBox) {
+        sendMessageToUser("Manual Breathing");
+        List<ServerPlayer> entities = level.getEntitiesOfClass(ServerPlayer.class, boundingBox.inflate(16.0, 8.0, 16.0), EntitySelector.NO_SPECTATORS);
+        addUserTargetsOrSelfServerPlayer(entities, user);
+
+        for (ServerPlayer player : entities) {
+            if (player != null) {
+                player.setAttached(ModAttachmentTypes.MANUAL_BREATHING, true);
+
+                player.connection.send(new ClientboundSetTitleTextPacket(
+                        Component.literal("Breathe")
+                                .withStyle(ChatFormatting.BLUE)
+                ));
+            }
+        }
+    }
+
     private void chaosEffect(HitResult hitResult, AABB boundingBox) {
         sendMessageToUser("Chaos Effect");
         List<Player> entities = level.getEntitiesOfClass(Player.class, boundingBox.inflate(16.0, 8.0, 16.0), EntitySelector.NO_SPECTATORS);
@@ -736,7 +760,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                 player.setAttached(ModAttachmentTypes.MISSCLICK, true);
 
                 player.connection.send(new ClientboundSetTitleTextPacket(
-                        Component.literal("Missclick")
+                        Component.literal("Missclick :P")
                                 .withStyle(ChatFormatting.RED)
                 ));
             }
@@ -1462,6 +1486,64 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         }
     }
 
+    private void increaseInteractionRange(HitResult hitResult, AABB boundingBox) {
+        List<Player> entities = level.getEntitiesOfClass(Player.class,
+                boundingBox.inflate(16.0, 8.0, 16.0),
+                EntitySelector.NO_SPECTATORS
+        );
+
+        for (LivingEntity entity : entities) {
+            if (entity instanceof Player player) {
+                player.sendSystemMessage(Component.literal("+1"));
+
+                Identifier entityInteractionRangeModifierID = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "entity_interaction_range_modifier");
+                Identifier blockInteractionRangeModifierID = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "block_interaction_range_modifier");
+
+                if (player.getAttributes().hasModifier(Attributes.ENTITY_INTERACTION_RANGE, entityInteractionRangeModifierID)) {
+                    AttributeModifier rangeModifier = new AttributeModifier(entityInteractionRangeModifierID
+                            , Math.min(player.getAttributes().getModifierValue(Attributes.ENTITY_INTERACTION_RANGE, entityInteractionRangeModifierID) + 1, 5)
+                            , AttributeModifier.Operation.ADD_VALUE);
+
+                    AttributeInstance entityInteractionRangeInstance = player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE);
+                    if (entityInteractionRangeInstance != null) {
+                        entityInteractionRangeInstance.removeModifier(entityInteractionRangeModifierID);
+                        entityInteractionRangeInstance.addOrReplacePermanentModifier(rangeModifier);
+                    }
+                } else {
+                    AttributeInstance entityInteractionRangeInstance = player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE);
+                    AttributeModifier rangeModifier = new AttributeModifier(entityInteractionRangeModifierID
+                            , 1
+                            , AttributeModifier.Operation.ADD_VALUE);
+
+                    if (entityInteractionRangeInstance != null) {
+                        entityInteractionRangeInstance.addOrReplacePermanentModifier(rangeModifier);
+                    }
+                }
+
+                if (player.getAttributes().hasModifier(Attributes.BLOCK_INTERACTION_RANGE, blockInteractionRangeModifierID)) {
+                    AttributeModifier rangeModifier = new AttributeModifier(blockInteractionRangeModifierID
+                            , Math.min(player.getAttributes().getModifierValue(Attributes.BLOCK_INTERACTION_RANGE, blockInteractionRangeModifierID) + 1, 5)
+                            , AttributeModifier.Operation.ADD_VALUE);
+
+                    AttributeInstance entityInteractionRangeInstance = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
+                    if (entityInteractionRangeInstance != null) {
+                        entityInteractionRangeInstance.removeModifier(blockInteractionRangeModifierID);
+                        entityInteractionRangeInstance.addOrReplacePermanentModifier(rangeModifier);
+                    }
+                } else {
+                    AttributeInstance entityInteractionRangeInstance = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
+                    AttributeModifier rangeModifier = new AttributeModifier(blockInteractionRangeModifierID
+                            , 1
+                            , AttributeModifier.Operation.ADD_VALUE);
+
+                    if (entityInteractionRangeInstance != null) {
+                        entityInteractionRangeInstance.addOrReplacePermanentModifier(rangeModifier);
+                    }
+                }
+            }
+        }
+    }
+
     // DEBUG
 
     private void debugHelp(HitResult hitResult) {
@@ -1499,7 +1581,9 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             sendMessageToUser("GiantSlime");
             sendMessageToUser("ChaosEffect");
             sendMessageToUser("ArrowShooter");
-            sendMessageToUser("AdyacentBlockPlacing");
+            sendMessageToUser("Missclick");
+            sendMessageToUser("Range");
+            sendMessageToUser("ManualBreathing");
         }
     }
 

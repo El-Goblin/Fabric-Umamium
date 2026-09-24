@@ -1,6 +1,7 @@
 package net.elgoblin.umamium.client;
 
 import net.elgoblin.umamium.item.ModItems;
+import net.elgoblin.umamium.networking.ManualBreathePayload;
 import net.elgoblin.umamium.networking.SwitchEnchantmentToggleSafeModePayload;
 import net.elgoblin.umamium.networking.dimensionalpocket.DimensionalPocketScrollBetweenGroupsPayload;
 import net.elgoblin.umamium.networking.dimensionalpocket.DimensionalPocketScrollInsideGroupPayload;
@@ -22,6 +23,10 @@ public class ClientEvents {
 
             while (ModKeybinds.SWITCH_ENCHANTMENTS_TOGGLE_SAFE_MODE.consumeClick()) {
                 ClientPlayNetworking.send(new SwitchEnchantmentToggleSafeModePayload());
+            }
+
+            if (ModKeybinds.MANUAL_BREATHE.isDown()) {
+                ClientPlayNetworking.send(new ManualBreathePayload());
             }
 
             if (client.player != null && tickCounter % 2 == 0) {

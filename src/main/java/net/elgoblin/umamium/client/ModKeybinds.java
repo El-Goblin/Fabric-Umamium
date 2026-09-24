@@ -16,6 +16,7 @@ public class ModKeybinds {
     public static KeyMapping SWITCH_ENCHANTMENTS_TOGGLE_SAFE_MODE;
     public static KeyMapping SCROLL_INSIDE_GROUP;
     public static KeyMapping SCROLL_BETWEEN_GROUPS;
+    public static KeyMapping MANUAL_BREATHE;
 
     public static void registerModKeybinds() {
         SWITCH_ENCHANTMENTS_TOGGLE_SAFE_MODE = KeyMappingHelper.registerKeyMapping(
@@ -41,6 +42,15 @@ public class ModKeybinds {
                         "key." + Umamium.MOD_ID +".scroll_between_groups",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_GRAVE_ACCENT,
+                        LEGENDARY_TOOLS
+                )
+        );
+
+        MANUAL_BREATHE = KeyMappingHelper.registerKeyMapping(
+                new KeyMapping(
+                        "key." + Umamium.MOD_ID +".manual_breathe",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_Z,
                         LEGENDARY_TOOLS
                 )
         );

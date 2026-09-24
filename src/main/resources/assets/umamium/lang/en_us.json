@@ -487,6 +487,7 @@
   "effect.umamium.chaos_effect": "Chaos",
   "effect.umamium.missclick": "Missclick",
   "effect.umamium.night_owl": "Night Owl",
+  "effect.umamium.manual_breathing": "Manual Breathing",
 
   "entity.umamium.chaos_orb": "Chaos Orb",
 
@@ -496,6 +497,7 @@
 
   "key.category.umamium.legendary_tools": "Legendary Tools",
   "key.umamium.switch_enchantments_toggle_safe_mode": "Switch Enchantments/Toggle Safe Mode",
+  "key.umamium.manual_breathe": "Manual Breathe",
   "key.umamium.scroll_between_groups": "Scroll Between Groups",
   "key.umamium.scroll_inside_group": "Scroll Inside Group",
   "enchantment.umamium.linker": "Linker",

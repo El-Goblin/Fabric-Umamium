@@ -7,6 +7,7 @@ public class ModPayloads {
 
     public static void registerPayloads() {
         PayloadTypeRegistry.serverboundPlay().register(SwitchEnchantmentToggleSafeModePayload.TYPE, SwitchEnchantmentToggleSafeModePayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ManualBreathePayload.TYPE, ManualBreathePayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(DimensionalPocketSelectColorPayload.TYPE, DimensionalPocketSelectColorPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(DimensionalPocketMiddleClickQueryPayload.TYPE, DimensionalPocketMiddleClickQueryPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(DimensionalPocketScrollInsideGroupPayload.TYPE, DimensionalPocketScrollInsideGroupPayload.CODEC);

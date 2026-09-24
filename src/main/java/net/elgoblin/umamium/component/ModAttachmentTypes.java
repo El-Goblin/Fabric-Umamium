@@ -24,7 +24,19 @@ public class ModAttachmentTypes {
 
     public static final AttachmentType<Boolean> MISSCLICK =
             AttachmentRegistry.create(
-                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "adyacent_block_placing"),
+                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "missclick"),
+                    builder -> builder
+                            .persistent(Codec.BOOL)
+                            .copyOnDeath()
+                            .syncWith(
+                                    ByteBufCodecs.BOOL,
+                                    AttachmentSyncPredicate.targetOnly()
+                            )
+            );
+
+    public static final AttachmentType<Boolean> MANUAL_BREATHING =
+            AttachmentRegistry.create(
+                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "manual_breathing"),
                     builder -> builder
                             .persistent(Codec.BOOL)
                             .copyOnDeath()

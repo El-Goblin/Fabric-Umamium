@@ -32,6 +32,7 @@ public class UmamiumClient implements ClientModInitializer {
 
 	private static final Identifier NIGHT_OWL = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/night_owl.png");
 	private static final Identifier MISSCLICK = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/missclick.png");
+	private static final Identifier MANUAL_BREATHING = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/slimey.png");
 
 	private static final Identifier EFFECT_BACKGROUND_AMBIENT_SPRITE = Identifier.withDefaultNamespace("hud/effect_background_ambient");
 	private static final Identifier EFFECT_BACKGROUND_SPRITE = Identifier.withDefaultNamespace("hud/effect_background");
@@ -249,6 +250,9 @@ public class UmamiumClient implements ClientModInitializer {
 		if (player.hasAttached(ModAttachmentTypes.MISSCLICK)) {
 			attachmentSpritePaths.add(MISSCLICK);
 		}
+		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
+			attachmentSpritePaths.add(MANUAL_BREATHING);
+		}
 
 		return attachmentSpritePaths;
 	}
@@ -261,6 +265,9 @@ public class UmamiumClient implements ClientModInitializer {
 		}
 		if (player.hasAttached(ModAttachmentTypes.MISSCLICK)) {
 			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".missclick"));
+		}
+		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
+			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".manual_breathing"));
 		}
 
 		return attachmentNames;

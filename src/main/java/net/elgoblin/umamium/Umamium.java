@@ -20,8 +20,11 @@ import net.elgoblin.umamium.util.ModLootTableModifiers;
 import net.elgoblin.umamium.util.SnowGolemLifetimes;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.entity.event.v1.effect.ServerMobEffectEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.ItemEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,8 +32,10 @@ import net.minecraft.resources.Identifier;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.golem.SnowGolem;
@@ -38,8 +43,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +86,8 @@ public class Umamium implements ModInitializer {
 		});
 
 		ServerLivingEntityEvents.AFTER_DAMAGE.register(Umamium::applyAfterDamageEffects);
+		ServerLivingEntityEvents.ALLOW_DEATH.register(Umamium::applyAllowDeathEvents);
+		ServerLivingEntityEvents.AFTER_DEATH.register(Umamium::applyAfterDeathEvents);
 
 		ItemEvents.USE_ON.register((context -> {
 			Player player = context.getPlayer();
@@ -135,59 +145,22 @@ public class Umamium implements ModInitializer {
 			}
 			return null;
 		}));
+	}
 
+	private static boolean applyAllowDeathEvents(LivingEntity entity, DamageSource source, float v) {
+		if (source.getEntity() instanceof Player player) {
+			player.heal(v/4);
+		}
+		return true;
+	}
 
-//		ItemEvents.USE_ON.register((context) -> {
-//			Player player = context.getPlayer();
-//			if (player == null) {
-//				return null;
-//			}
-//
-//			Long seed = player.getAttached(ModAttachmentTypes.ADYACENT_BLOCK_PLACING);
-//			if (seed == null) {
-//				return null;
-//			}
-//			seed = seed + blockPlacedCount;
-//			blockPlacedCount++;
-//
-//			ItemStack stack = context.getItemInHand();
-//			if (!(stack.getItem() instanceof BlockItem blockItem)) {
-//				return null;
-//			}
-//
-//			List<Vec3i> positions = new ArrayList<>(List.of(
-//					new Vec3i(1, 0, 0),
-//					new Vec3i(0, 1, 0),
-//					new Vec3i(0, 0, 1),
-//					new Vec3i(-1, 0, 0),
-//					new Vec3i(0, -1, 0),
-//					new Vec3i(0, 0, -1)
-//			));
-//
-//			Collections.shuffle(positions, new Random(seed));
-//
-//			for (Vec3i offset : positions) {
-//				BlockPos newPos = context.getClickedPos().offset(offset);
-//
-//				BlockHitResult hit = new BlockHitResult(
-//						Vec3.atCenterOf(newPos),
-//						context.getClickedFace(),
-//						newPos,
-//						context.isInside()
-//				);
-//
-//				BlockPlaceContext placeContext = new BlockPlaceContext(player, context.getHand(), stack, hit);
-//				System.out.println("Server " + placeContext.getClickedPos());
-//
-//				InteractionResult result = blockItem.place(placeContext);
-//
-//				if (result.consumesAction()) {
-//					return InteractionResult.SUCCESS;
-//				}
-//			}
-//
-//			return null;
-//		});
+	private static void applyAfterDeathEvents(LivingEntity entity, DamageSource source) {
+		if (source.getEntity() instanceof Player player) {
+			ItemStack damagingItem = player.getMainHandItem();
+			if (damagingItem.is(ModItems.FIENDBLADE_LONGSWORD)) {
+				player.getFoodData().eat(2, 0.0F);
+			}
+		}
 	}
 
 	private static void applyAfterDamageEffects(LivingEntity entity, DamageSource source, float baseDamageTaken, float damageTaken, boolean blocked) {
@@ -210,8 +183,15 @@ public class Umamium implements ModInitializer {
 				serverLevel.addFreshEntity(golem);
 				SnowGolemLifetimes.get(serverLevel).addEntity(golem);
 			}
+			if (source.getEntity() instanceof Player player) {
+				ItemStack damagingItem = player.getMainHandItem();
+				if (damagingItem.is(ModItems.FIENDBLADE_LONGSWORD)) {
+					player.heal(damageTaken/4);
+				}
+			}
 		}
 	}
+
 
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(MOD_ID, path);

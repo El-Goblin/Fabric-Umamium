@@ -89,7 +89,7 @@ public class ModItems {
             new LongswordItem(properties.fireResistant(),
                     ToolMaterial.NETHERITE, 5, -2.4F, 1, 2));
     public static final Item FIENDBLADE_LONGSWORD = registerItem("fiendblade_longsword", properties ->
-            new LongswordItem(properties.fireResistant().rarity(Rarity.RARE),
+            new FiendbladLongswordItem(properties.fireResistant().rarity(Rarity.RARE),
                     ToolMaterial.NETHERITE, 5, -2.4F, 1, 2));
     public static final Item FIRE_DRAGONSWORD_LONGSWORD = registerItem("fire_dragonsword_longsword", properties ->
             new LongswordItem(properties.fireResistant(),

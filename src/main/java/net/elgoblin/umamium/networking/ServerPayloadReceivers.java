@@ -1,6 +1,7 @@
 package net.elgoblin.umamium.networking;
 
 import net.elgoblin.umamium.client.DimensionalPocketCache;
+import net.elgoblin.umamium.component.ModAttachmentTypes;
 import net.elgoblin.umamium.component.ModDataComponentTypes;
 import net.elgoblin.umamium.item.ModItems;
 import net.elgoblin.umamium.item.custom.DimensionalPocketItem;
@@ -31,6 +32,19 @@ import java.util.*;
 public class ServerPayloadReceivers {
 
     public static void registerServerGlobalReceivers() {
+
+        // MANUAL BREATHE
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                ManualBreathePayload.TYPE, (payload, context) -> {
+                    context.server().execute(() -> {
+                        ServerPlayer player = context.player();
+                        if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
+                            player.setAirSupply(player.getAirSupply() + 6);
+                        }
+                    });
+                }
+        );
 
         // TOGGLE SAFE MODE
         ServerPlayNetworking.registerGlobalReceiver(
