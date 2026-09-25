@@ -1064,7 +1064,8 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                 EntitySelector.NO_SPECTATORS
         );
 
-        ScalePack chosenPack = scalePacks.get(this.random.nextInt(scalePacks.size()));
+        int chosenScale = this.random.nextInt(scalePacks.size());
+        ScalePack chosenPack = scalePacks.get(chosenScale);
 
         if (user instanceof LivingEntity && !entities.contains(user)) {
             entities.add((LivingEntity) user);
@@ -1086,6 +1087,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                 applyAttributeChange(Attributes.MINING_EFFICIENCY, chosenPack.block_break_speed, player);
 
                 player.getInventory().add(new ItemStack(ModItems.LA_LECHONA));
+                player.setAttached(ModAttachmentTypes.SCALE, chosenScale);
             }
         }
     }

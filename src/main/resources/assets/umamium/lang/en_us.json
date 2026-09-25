@@ -488,6 +488,11 @@
   "effect.umamium.missclick": "Missclick",
   "effect.umamium.night_owl": "Night Owl",
   "effect.umamium.manual_breathing": "Manual Breathing",
+  "effect.umamium.scale_0": "Gnome",
+  "effect.umamium.scale_1": "Dwarf",
+  "effect.umamium.scale_2": "Orc",
+  "effect.umamium.scale_3": "Goliath",
+  "effect.umamium.range": "Range",
 
   "entity.umamium.chaos_orb": "Chaos Orb",
 

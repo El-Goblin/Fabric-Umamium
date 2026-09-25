@@ -46,6 +46,18 @@ public class ModAttachmentTypes {
                             )
             );
 
+    public static final AttachmentType<Integer> SCALE =
+            AttachmentRegistry.create(
+                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "scale"),
+                    builder -> builder
+                            .persistent(Codec.INT)
+                            .copyOnDeath()
+                            .syncWith(
+                                    ByteBufCodecs.INT,
+                                    AttachmentSyncPredicate.targetOnly()
+                            )
+            );
+
     public static void registerAttachmentTypes() {
         Umamium.LOGGER.info("Registering Attachments for " + Umamium.MOD_ID);
     }

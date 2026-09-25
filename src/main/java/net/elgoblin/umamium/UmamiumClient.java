@@ -23,7 +23,10 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.List;
@@ -33,6 +36,8 @@ public class UmamiumClient implements ClientModInitializer {
 	private static final Identifier NIGHT_OWL = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/night_owl.png");
 	private static final Identifier MISSCLICK = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/missclick.png");
 	private static final Identifier MANUAL_BREATHING = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/slimey.png");
+	private static final Identifier RANGE = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/range.png");
+	private static final Identifier SCALE = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/scale.png");
 
 	private static final Identifier EFFECT_BACKGROUND_AMBIENT_SPRITE = Identifier.withDefaultNamespace("hud/effect_background_ambient");
 	private static final Identifier EFFECT_BACKGROUND_SPRITE = Identifier.withDefaultNamespace("hud/effect_background");
@@ -244,14 +249,21 @@ public class UmamiumClient implements ClientModInitializer {
 	public static List<Identifier> getAttachmentSpritePaths(LocalPlayer player) {
 		List<Identifier> attachmentSpritePaths = new ArrayList<>();
 
+		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
+			attachmentSpritePaths.add(MANUAL_BREATHING);
+		}
 		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {
 			attachmentSpritePaths.add(NIGHT_OWL);
 		}
 		if (player.hasAttached(ModAttachmentTypes.MISSCLICK)) {
 			attachmentSpritePaths.add(MISSCLICK);
 		}
-		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
-			attachmentSpritePaths.add(MANUAL_BREATHING);
+		AttributeInstance entityInteractionRange = player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE);
+		if (entityInteractionRange != null && entityInteractionRange.hasModifier(Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "entity_interaction_range_modifier"))) {
+			attachmentSpritePaths.add(RANGE);
+		}
+		if (player.hasAttached(ModAttachmentTypes.SCALE)) {
+			attachmentSpritePaths.add(SCALE);
 		}
 
 		return attachmentSpritePaths;
@@ -260,14 +272,21 @@ public class UmamiumClient implements ClientModInitializer {
 	public static List<Component> getAttachmentNames(LocalPlayer player) {
 		List<Component> attachmentNames = new ArrayList<>();
 
+		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
+			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".manual_breathing"));
+		}
 		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {
 			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".night_owl"));
 		}
 		if (player.hasAttached(ModAttachmentTypes.MISSCLICK)) {
 			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".missclick"));
 		}
-		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
-			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".manual_breathing"));
+		AttributeInstance entityInteractionRange = player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE);
+		if (entityInteractionRange != null && entityInteractionRange.hasModifier(Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "entity_interaction_range_modifier"))) {
+			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".range"));
+		}
+		if (player.hasAttached(ModAttachmentTypes.SCALE)) {
+			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".scale_" + player.getAttached(ModAttachmentTypes.SCALE)));
 		}
 
 		return attachmentNames;
