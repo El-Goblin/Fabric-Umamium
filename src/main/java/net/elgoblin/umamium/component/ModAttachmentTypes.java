@@ -46,12 +46,35 @@ public class ModAttachmentTypes {
                             )
             );
 
+    public static final AttachmentType<Boolean> MALCRAFT =
+            AttachmentRegistry.create(
+                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "malcraft"),
+                    builder -> builder
+                            .persistent(Codec.BOOL)
+                            .copyOnDeath()
+                            .syncWith(
+                                    ByteBufCodecs.BOOL,
+                                    AttachmentSyncPredicate.targetOnly()
+                            )
+            );
+
     public static final AttachmentType<Integer> SCALE =
             AttachmentRegistry.create(
                     Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "scale"),
                     builder -> builder
                             .persistent(Codec.INT)
                             .copyOnDeath()
+                            .syncWith(
+                                    ByteBufCodecs.INT,
+                                    AttachmentSyncPredicate.targetOnly()
+                            )
+            );
+
+    public static final AttachmentType<Integer> CUMULATIVE_EXTRA_DAMAGE =
+            AttachmentRegistry.create(
+                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "cumulative_extra_damage"),
+                    builder -> builder
+                            .persistent(Codec.INT)
                             .syncWith(
                                     ByteBufCodecs.INT,
                                     AttachmentSyncPredicate.targetOnly()

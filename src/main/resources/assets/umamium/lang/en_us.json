@@ -494,6 +494,7 @@
   "effect.umamium.scale_2": "Orc",
   "effect.umamium.scale_3": "Goliath",
   "effect.umamium.range": "Range",
+  "effect.umamium.cumulative_extra_damage": "+Damage",
 
   "entity.umamium.chaos_orb": "Chaos Orb",
 

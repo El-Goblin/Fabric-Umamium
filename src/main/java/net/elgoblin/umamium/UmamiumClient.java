@@ -38,6 +38,7 @@ public class UmamiumClient implements ClientModInitializer {
 	private static final Identifier MANUAL_BREATHING = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/slimey.png");
 	private static final Identifier RANGE = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/range.png");
 	private static final Identifier SCALE = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/scale.png");
+	private static final Identifier CUMULATIVE_EXTRA_DAMAGE = Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "textures/mob_effect/slimey.png");
 
 	private static final Identifier EFFECT_BACKGROUND_AMBIENT_SPRITE = Identifier.withDefaultNamespace("hud/effect_background_ambient");
 	private static final Identifier EFFECT_BACKGROUND_SPRITE = Identifier.withDefaultNamespace("hud/effect_background");
@@ -154,6 +155,9 @@ public class UmamiumClient implements ClientModInitializer {
 		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
 			attachmentSpritePaths.add(MANUAL_BREATHING);
 		}
+		if (player.hasAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE)) {
+			attachmentSpritePaths.add(CUMULATIVE_EXTRA_DAMAGE);
+		}
 		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {
 			attachmentSpritePaths.add(NIGHT_OWL);
 		}
@@ -176,6 +180,9 @@ public class UmamiumClient implements ClientModInitializer {
 
 		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
 			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".manual_breathing"));
+		}
+		if (player.hasAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE)) {
+			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".cumulative_extra_damage"));
 		}
 		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {
 			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".night_owl"));

@@ -185,6 +185,17 @@ public class Umamium implements ModInitializer {
 					player.heal(damageTaken/4);
 				}
 			}
+			if (entity instanceof Player player) {
+				if (player.hasAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE)) {
+					DamageSource newSource = serverLevel.damageSources().generic();
+					Integer extraDamage = player.getAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE);
+
+					if (source.typeHolder() != newSource.typeHolder() && extraDamage != null) {
+						entity.hurtServer(serverLevel, newSource, extraDamage);
+						player.setAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE, extraDamage+1);
+					}
+				}
+			}
 		}
 	}
 

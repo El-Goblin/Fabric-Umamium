@@ -130,6 +130,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             Map.entry("waterweakness", new Pair<>(2,2)),
             Map.entry("chaoseffect", new Pair<>(2,3)),
             Map.entry("range", new Pair<>(2,4)),
+//            Map.entry("malcraft", new Pair<>(2,5)),
 
             Map.entry("nightowl", new Pair<>(3,0)),
 //
@@ -143,6 +144,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             Map.entry("levitation", new Pair<>(5,4)),
             Map.entry("missclick", new Pair<>(5,5)),
             Map.entry("manualbreathing", new Pair<>(5,6)),
+            Map.entry("cumulativeextradamage", new Pair<>(5,7)),
 //
             Map.entry("help", new Pair<>(6,0))
 //            Map.entry("skyblock", new Pair<>(6,1))
@@ -181,6 +183,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::waterWeakness,
             this::chaosEffect,
             this::increaseInteractionRange
+//            this::malcraft
     ));
     private List<Consumer<HitResult>> selfChaosEffects = new ArrayList<>(List.of(
             this::nightOwl
@@ -201,7 +204,8 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::changeScale,
             this::levitation,
             this::missclick,
-            this::manualBreathing
+            this::manualBreathing,
+            this::cumulativeExtraDamage
     ));
 
     private List<Consumer<HitResult>> debugChaosEffects = new ArrayList<>(List.of(
@@ -829,6 +833,23 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                     Component.literal("Hoy me quedo hasta tarde")
                             .withStyle(ChatFormatting.RED)
             ));
+        }
+    }
+
+    private void cumulativeExtraDamage(HitResult hitResult, AABB boundingBox) {
+        sendMessageToUser("Cumulative Extra Damage");
+        List<ServerPlayer> entities = level.getEntitiesOfClass(ServerPlayer.class, boundingBox.inflate(16.0, 8.0, 16.0), EntitySelector.NO_SPECTATORS);
+        addUserTargetsOrSelfServerPlayer(entities, user);
+
+        for (ServerPlayer player : entities) {
+            if (player != null) {
+                player.setAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE, 1);
+
+                player.connection.send(new ClientboundSetTitleTextPacket(
+                        Component.literal("Cumulative Extra Damage")
+                                .withStyle(ChatFormatting.RED)
+                ));
+            }
         }
     }
 
@@ -1551,6 +1572,19 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         this.spawnAtLocation(level, ModItems.POKEBALL.getDefaultInstance(), 0);
     }
 
+//    private void malcraft(HitResult hitResult, AABB boundingBox) {
+//        List<Player> entities = level.getEntitiesOfClass(Player.class,
+//                boundingBox.inflate(16.0, 8.0, 16.0),
+//                EntitySelector.NO_SPECTATORS
+//        );
+//
+//        for (LivingEntity entity : entities) {
+//            if (entity instanceof Player player) {
+//                player.setAttached(ModAttachmentTypes.MALCRAFT, true);
+//            }
+//        }
+//    }
+
     // DEBUG
 
     private void debugHelp(HitResult hitResult) {
@@ -1591,6 +1625,8 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             sendMessageToUser("Missclick");
             sendMessageToUser("Range");
             sendMessageToUser("ManualBreathing");
+            sendMessageToUser("Pokeball");
+            sendMessageToUser("CumulativeExtraDamage");
         }
     }
 
