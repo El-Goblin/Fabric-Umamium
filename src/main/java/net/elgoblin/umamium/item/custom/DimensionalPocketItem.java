@@ -180,8 +180,6 @@ public class DimensionalPocketItem extends Item {
 
         // Da un stack distinto al seleccionado, para permitir gastar el cofre entero aunque no estes en safeMode
         stackToUse = findNonEmptyStackInGroupOfType(deposit, group, group.get(currentSelectedItemIndex), stackToUse.getItem(), safeModeOn);
-        System.out.println(currentSelectedItemIndex);
-        System.out.println(stackToUse);
         if (stackToUse.isEmpty()) {
             if (!user.isCreative() && notAllowedToUse(safeModeOn, fallbackStack)) {
                 return ItemStack.EMPTY;

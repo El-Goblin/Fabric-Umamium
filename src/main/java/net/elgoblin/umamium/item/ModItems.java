@@ -29,6 +29,7 @@ public class ModItems {
                     .usingConvertsTo(Items.BUCKET)));
 
     public static final Item CHAOS_ORB = registerItem("chaos_orb", ChaosOrbItem::new);
+    public static final Item POKEBALL = registerItem("pokeball", properties -> new PokeballItem(properties.rarity(Rarity.RARE)));
 
     public static final Item FLASH = registerItem("flash", properties ->
             new FlashItem(properties.stacksTo(1).rarity(Rarity.EPIC)));
@@ -128,6 +129,7 @@ public class ModItems {
             output.accept(MEMORY_MIRROR);
             output.accept(CHAOS_MIRROR);
             output.accept(DIMENSIONAL_POCKET);
+            output.accept(POKEBALL);
             output.accept(CHAOS_ORB);
         });
 

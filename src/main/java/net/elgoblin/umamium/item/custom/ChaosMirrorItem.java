@@ -43,11 +43,9 @@ public class ChaosMirrorItem extends Item {
                 );
 
                 while (level.getBlockState(BlockPos.containing(newCoordinates)).isAir()) {
-                    System.out.println("isAir");
                     newCoordinates = newCoordinates.add(new Vec3(0,-1,0));
                 }
                 while (!level.getBlockState(BlockPos.containing(newCoordinates)).isAir()) {
-                    System.out.println("isNotAir");
                     newCoordinates = newCoordinates.add(new Vec3(0,1,0));
                 }
                 newCoordinates = newCoordinates.add(new Vec3(0,1,0));

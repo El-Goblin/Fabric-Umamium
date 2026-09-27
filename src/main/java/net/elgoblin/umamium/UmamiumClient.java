@@ -49,6 +49,7 @@ public class UmamiumClient implements ClientModInitializer {
 		ModKeybinds.registerModKeybinds();
 		DimensionalPocketOverlay.register();
 		EntityRendererRegistry.register(ModEntities.CHAOS_ORB, ThrownItemRenderer::new);
+		EntityRendererRegistry.register(ModEntities.POKEBALL, ThrownItemRenderer::new);
 
 		ModModelLayers.register();
 		ModSpecialModelRenderers.register();
@@ -57,105 +58,6 @@ public class UmamiumClient implements ClientModInitializer {
 //				ModParticles.CHAOS_ORB_FRAGILE_PARTICLE,
 //				2
 //		);
-
-//		ItemEvents.USE_ON.register((context -> {
-//			Player player = context.getPlayer();
-//			if (player == null) { return null; }
-//			if (!player.hasAttached(ModAttachmentTypes.ADYACENT_BLOCK_PLACING)) { return null; }
-//
-//			ItemStack stack = context.getItemInHand();
-//			if (!(stack.getItem() instanceof BlockItem blockItem)) { return null; }
-//
-//			UUID uuid = player.getUUID();
-//			long seed = uuid.getMostSignificantBits() ^ uuid.getLeastSignificantBits() ^ blockPlacedCount++;
-//
-//			System.out.println("Seed Client = " + seed);
-//
-//			List<Vec3i> positions = new ArrayList<>(List.of(
-//					new Vec3i(1, 0, 0),
-//					new Vec3i(0, 1, 0),
-//					new Vec3i(0, 0, 1),
-//					new Vec3i(-1, 0, 0),
-//					new Vec3i(0, -1, 0),
-//					new Vec3i(0, 0, -1)
-//			));
-//
-//			Collections.shuffle(positions, new Random(seed));
-//
-//			for (Vec3i offset : positions) {
-//				BlockPos newPos = context.getClickedPos().offset(offset);
-//
-//				BlockHitResult newHitResult = new BlockHitResult(
-//						Vec3.atCenterOf(newPos),
-//						context.getClickedFace(),
-//						newPos,
-//						context.isInside()
-//				);
-//
-//				BlockPlaceContext placeContext = new BlockPlaceContext(player, context.getHand(), stack, newHitResult);
-//				InteractionResult result = blockItem.place(placeContext);
-//
-//				if (result.consumesAction()) {
-//					return InteractionResult.SUCCESS;
-//				}
-//			}
-//			return null;
-//		}));
-
-//		ItemEvents.USE_ON.register((context) -> {
-//			Player player = context.getPlayer();
-//			System.out.println("entre");
-//			if (player == null) {
-//				return null;
-//			}
-//			System.out.println("player no null");
-//
-//			Long seed = player.getAttached(ModAttachmentTypes.ADYACENT_BLOCK_PLACING);
-//			if (seed == null) {
-//				return null;
-//			}
-//			System.out.println("seed no null");
-//			seed = seed + blockPlacedCount;
-//			blockPlacedCount++;
-//
-//			ItemStack stack = context.getItemInHand();
-//			if (!(stack.getItem() instanceof BlockItem blockItem)) {
-//				return null;
-//			}
-//
-//			List<Vec3i> positions = new ArrayList<>(List.of(
-//					new Vec3i(1, 0, 0),
-//					new Vec3i(0, 1, 0),
-//					new Vec3i(0, 0, 1),
-//					new Vec3i(-1, 0, 0),
-//					new Vec3i(0, -1, 0),
-//					new Vec3i(0, 0, -1)
-//			));
-//
-//			Collections.shuffle(positions, new Random(seed));
-//
-//			for (Vec3i offset : positions) {
-//				BlockPos newPos = context.getClickedPos().offset(offset);
-//
-//				BlockHitResult hit = new BlockHitResult(
-//						Vec3.atCenterOf(newPos),
-//						context.getClickedFace(),
-//						newPos,
-//						context.isInside()
-//				);
-//
-//				BlockPlaceContext placeContext = new BlockPlaceContext(player, context.getHand(), stack, hit);
-//				System.out.println("Client " + placeContext.getClickedPos());
-//
-//				InteractionResult result = blockItem.place(placeContext);
-//
-//				if (result.consumesAction()) {
-//					return InteractionResult.SUCCESS;
-//				}
-//			}
-//
-//			return null;
-//		});
 
 		HudElementRegistry.attachElementAfter(
 				VanillaHudElements.HOTBAR,

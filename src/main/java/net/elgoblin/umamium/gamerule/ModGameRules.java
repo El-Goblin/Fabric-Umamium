@@ -46,6 +46,22 @@ public class ModGameRules {
             .category(UMAMIUM_GAMERULE_CATEGORY)
             .buildAndRegister(Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "chaos_orb_debug_messages"));
 
+    public static final GameRule<Boolean> CAN_CAPTURE_ENDER_DRAGON = GameRuleBuilder
+            .forBoolean(false)
+            .category(UMAMIUM_GAMERULE_CATEGORY)
+            .buildAndRegister(Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "pokeball_can_capture_ender_dragon"));
+
+    public static final GameRule<Boolean> CAN_CAPTURE_NON_MOB_ENTITIES = GameRuleBuilder
+            .forBoolean(true)
+            .category(UMAMIUM_GAMERULE_CATEGORY)
+            .buildAndRegister(Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "pokeball_can_capture_non_living_entities"));
+
+    public static final GameRule<Boolean> CAN_CAPTURE_PLAYERS = GameRuleBuilder
+            .forBoolean(true)
+            .category(UMAMIUM_GAMERULE_CATEGORY)
+            .buildAndRegister(Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "pokeball_can_capture_players"));
+
+
 
 
     public static void init() {}

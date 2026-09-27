@@ -119,10 +119,6 @@ public class Umamium implements ModInitializer {
 			Collections.shuffle(directions, new Random(seed));
 
 			for (Direction face : directions) {
-				if (!context.getLevel().isClientSide()) {
-					System.out.println("direction = " + face);
-					System.out.println("blockPos = " + context.getClickedPos().relative(context.getClickedFace()));
-				}
 				BlockPos position = context.getClickedPos().relative(context.getClickedFace());
 
 				if (!context.getLevel().getBlockState(position.relative(face)).canBeReplaced()) {

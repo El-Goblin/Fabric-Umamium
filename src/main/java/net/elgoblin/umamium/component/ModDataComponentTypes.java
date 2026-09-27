@@ -3,12 +3,15 @@ package net.elgoblin.umamium.component;
 import com.mojang.serialization.Codec;
 import net.elgoblin.umamium.Umamium;
 import net.elgoblin.umamium.effect.LaLechonaConsumeEffect;
+import net.elgoblin.umamium.entity.custom.PokeballEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
@@ -40,7 +43,7 @@ public class ModDataComponentTypes {
 
     public static final Map<DyeColor, DataComponentType<List<Integer>>> COLOR_INVENTORIES = new EnumMap<>(DyeColor.class);
 
-    public static final DataComponentType<Boolean> NIGHT_OWL = register("night_owl", builder -> builder.persistent(Codec.BOOL));
+    public static final DataComponentType<PokeballEntity.CapturedLivingEntity> CAPTURED_LIVING_ENTITY = register("captured_living_entity", builder -> builder.persistent(PokeballEntity.CapturedLivingEntity.CODEC));
 
     public static void registerComponents() {
         for (DyeColor color : DyeColor.values()) {

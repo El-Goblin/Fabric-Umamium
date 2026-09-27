@@ -76,6 +76,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -118,6 +119,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             Map.entry("mobpack", new Pair<>(0,13)),
             Map.entry("giantslime", new Pair<>(0,14)),
             Map.entry("arrowshooter", new Pair<>(0,15)),
+            Map.entry("pokeball", new Pair<>(0,16)),
 
             Map.entry("smallboing", new Pair<>(1,0)),
             Map.entry("beacon", new Pair<>(1,1)),
@@ -165,7 +167,8 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::getToolsSet,
             this::spawnMobPack,
             this::spawnGiantSlime,
-            this::arrowShooter
+            this::arrowShooter,
+            this::getPokeball
     ));
     private List<BiConsumer<HitResult, AABB>> areaChaosEffects = new ArrayList<>(List.of(
             this::smallBoing,
@@ -626,9 +629,6 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         sendMessageToUser("Arrow Shooter");
         ArrowShootersManager arrowShooters = ArrowShootersManager.get(level);
         arrowShooters.addShooter(this.getX(), this.getY() + 1, this.getZ());
-        System.out.println("X = " + this.getX());
-        System.out.println("Y = " + this.getY());
-        System.out.println("Z = " + this.getZ());
     }
 
     private void spawn5ChaosOrbs(HitResult hitResult) {
@@ -1544,6 +1544,11 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                 }
             }
         }
+    }
+
+    private void getPokeball(HitResult hitResult) {
+        sendMessageToUser("Pokeball");
+        this.spawnAtLocation(level, ModItems.POKEBALL.getDefaultInstance(), 0);
     }
 
     // DEBUG

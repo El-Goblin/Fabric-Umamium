@@ -468,6 +468,7 @@
   "item.umamium.fiendblade_longsword": "Fiendblade",
   "item.umamium.legendary_longsword": "Legendary Longsword",
   "item.umamium.chaos_orb": "Chaos Orb",
+  "item.umamium.pokeball": "Pokeball",
 
   "item.umamium.magic_mirror": "Magic Mirror",
   "item.umamium.chaos_mirror": "Chaos Mirror",
@@ -535,5 +536,9 @@
   "gamerule.umamium.void_sphere_fixed_size": "Void sphere fixed size",
   "gamerule.umamium.void_sphere_fixed_size.description": "Forces void sphere from the chaos orb event to occur with this radius when positive",
   "gamerule.umamium.void_sphere_size_multiplier": "Void sphere size multiplier",
-  "gamerule.umamium.void_sphere_size_multiplier.description": "Multiplies the void sphere radius from the chaos orb event, the base distribution remains the same."
+  "gamerule.umamium.void_sphere_size_multiplier.description": "Multiplies the void sphere radius from the chaos orb event, the base distribution remains the same.",
+  "gamerule.umamium.pokeball_can_capture_ender_dragon": "Pokeball can capture the Ender Dragon",
+  "gamerule.umamium.pokeball_can_capture_players": "Pokeball can capture other players",
+  "gamerule.umamium.pokeball_can_capture_non_living_entities": "Pokeball can capture non living entities",
+  "gamerule.umamium.pokeball_can_capture_non_living_entities.description": "Allows pokeballs to capture other types of entities such as end crystals, item frames and others."
 }

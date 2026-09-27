@@ -35,7 +35,6 @@ public class ChaosEffect extends MobEffect {
 
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-        System.out.println(ticksUntilNextOrb);
         ticksUntilNextOrb--;
         if (ticksUntilNextOrb <= 0) {
             ticksUntilNextOrb = RandomSource.create().nextIntBetweenInclusive(100, 300);
