@@ -34,7 +34,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.attribute.AttributeTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -76,7 +75,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -112,7 +110,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             Map.entry("book", new Pair<>(0,6)),
             Map.entry("prize", new Pair<>(0, 7)),
             Map.entry("xp", new Pair<>(0, 8)),
-            Map.entry("terrainsphere", new Pair<>(0,9)),
+            Map.entry("voidsphere", new Pair<>(0,9)),
             Map.entry("skeletonhorse", new Pair<>(0,10)),
             Map.entry("armor", new Pair<>(0,11)),
             Map.entry("tools", new Pair<>(0,12)),
@@ -177,7 +175,6 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::applyBeaconEffect
     ));
     private List<BiConsumer<HitResult, AABB>> selfAreaChaosEffects = new ArrayList<>(List.of(
-//            this::increaseInteractionRange,
             this::fragile,
             this::snowyBodyguards,
             this::waterWeakness,
@@ -205,7 +202,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             this::levitation,
             this::missclick,
             this::manualBreathing,
-            this::cumulativeExtraDamage
+            this::scarred
     ));
 
     private List<Consumer<HitResult>> debugChaosEffects = new ArrayList<>(List.of(
@@ -590,7 +587,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
     private void randomizePlayersPositions(HitResult hitResult) {
         sendMessageToUser("Teleport");
         int forceTeleport = random.nextInt(20);
-        if (forceTeleport == 0 && user != null && user instanceof Player player) {
+        if (forceTeleport == 0 && user instanceof Player player) {
             // Notar que de esta forma se aumenta la estadistica de veces usadas el item. Me parece correcto
             ModItems.CHAOS_MIRROR.use(level, player, InteractionHand.MAIN_HAND);
         }
@@ -601,23 +598,23 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
 
     private void explosion(HitResult hitResult) {
         sendMessageToUser("Explosion");
-        int kase = random.nextInt(19);
+        int kase = random.nextIntBetweenInclusive(1, 20);
 
-        if (kase > 16 && user != null) {
+        if (kase > 18 && user != null) {
             level.explode(this, user.getX(), user.getY(), user.getZ(),(float) 8.0, Level.ExplosionInteraction.BLOCK);
         }
         else {
-            level.explode(this, this.getX(), this.getY(), this.getZ(),(float) ((kase==0) ? 127.0 : 8.0), Level.ExplosionInteraction.BLOCK);
+            level.explode(this, this.getX(), this.getY(), this.getZ(),(float) ((kase==1) ? 127.0 : 8.0), Level.ExplosionInteraction.BLOCK);
         }
     }
 
     private void fireExplosion(HitResult hitResult) {
         sendMessageToUser("Fire Explosion");
-        int kase = random.nextInt(19);
+        int kase = random.nextIntBetweenInclusive(1, 20);
 
         LargeFireball fireballEntity;
         if (user != null) {
-            if (kase > 16) {
+            if (kase > 18) {
                 fireballEntity = new LargeFireball(level, (LivingEntity) user, new Vec3(0, -1.0f, 0), 4);
                 fireballEntity.setPos(user.getX(), user.getY()+2, user.getZ());
             }
@@ -724,8 +721,8 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
 
     private void chaosEffect(HitResult hitResult, AABB boundingBox) {
         sendMessageToUser("Chaos Effect");
-        List<Player> entities = level.getEntitiesOfClass(Player.class, boundingBox.inflate(16.0, 8.0, 16.0), EntitySelector.NO_SPECTATORS);
-        if (user != null && !entities.contains(user) && user instanceof Player player) {
+        List<Player> entities = level.getEntitiesOfClass(Player.class, boundingBox.inflate(32.0, 16.0, 32.0), EntitySelector.NO_SPECTATORS);
+        if (user instanceof Player player && !entities.contains(user)) {
             entities.add(player);
         }
         //level.sendParticles(ModParticles.CHAOS_ORB_FRAGILE_PARTICLE,this.getX(), this.getY(), this.getZ(), 1, 0.0, 3.0, 0.0, 1.0);
@@ -823,7 +820,6 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
     private void nightOwl(HitResult hitResult) {
         sendMessageToUser("Night Owl");
 
-
         if (user != null && user instanceof ServerPlayer player) {
             player.setAttached(ModAttachmentTypes.NIGHT_OWL, true);
 
@@ -836,17 +832,17 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         }
     }
 
-    private void cumulativeExtraDamage(HitResult hitResult, AABB boundingBox) {
-        sendMessageToUser("Cumulative Extra Damage");
+    private void scarred(HitResult hitResult, AABB boundingBox) {
+        sendMessageToUser("Scarred");
         List<ServerPlayer> entities = level.getEntitiesOfClass(ServerPlayer.class, boundingBox.inflate(16.0, 8.0, 16.0), EntitySelector.NO_SPECTATORS);
         addUserTargetsOrSelfServerPlayer(entities, user);
 
         for (ServerPlayer player : entities) {
             if (player != null) {
-                player.setAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE, 1);
+                player.setAttached(ModAttachmentTypes.SCARRED, 1);
 
                 player.connection.send(new ClientboundSetTitleTextPacket(
-                        Component.literal("Cumulative Extra Damage")
+                        Component.literal("Scarred")
                                 .withStyle(ChatFormatting.RED)
                 ));
             }
@@ -1030,6 +1026,9 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                 boundingBox.inflate(16.0, 8.0, 16.0),
                 EntitySelector.NO_SPECTATORS
         );
+        if (entities.isEmpty() && user != null) {
+            entities.add((LivingEntity) user);
+        }
         boolean goDown = this.random.nextBoolean();
 
         for (LivingEntity entity : entities) {
@@ -1124,7 +1123,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
     }
 
     private void voidSphere(HitResult hitResult) {
-        sendMessageToUser("Terrain Sphere");
+        sendMessageToUser("Void Sphere");
         float randomNumber = random.nextFloat();
         while (randomNumber < 0.0000000001f) {
             randomNumber = random.nextFloat();
@@ -1202,20 +1201,18 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                 level.addFreshEntity(giantSulfurCube);
             }
         }
-        else {
-            if (level.dimension() != Level.NETHER) {
-                Slime giantSlime = EntityTypes.SLIME.create(level, EntitySpawnReason.EVENT);
-                if (giantSlime != null) {
-                    giantSlime.setSize(64, true);
-                    applyAttributeChange(Attributes.JUMP_STRENGTH, 5, giantSlime);
-                    applyAttributeChange(Attributes.MOVEMENT_SPEED, 3, giantSlime);
-                    applyAttributeChange(Attributes.STEP_HEIGHT, 5, giantSlime);
-                    giantSlime.setCustomName(Component.literal("Thuvi' Ejah"));
-                    giantSlime.setCustomNameVisible(true);
-                    giantSlime.absSnapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+        if (level.dimension() == Level.OVERWORLD) {
+            Slime giantSlime = EntityTypes.SLIME.create(level, EntitySpawnReason.EVENT);
+            if (giantSlime != null) {
+                giantSlime.setSize(64, true);
+                applyAttributeChange(Attributes.JUMP_STRENGTH, 5, giantSlime);
+                applyAttributeChange(Attributes.MOVEMENT_SPEED, 3, giantSlime);
+                applyAttributeChange(Attributes.STEP_HEIGHT, 5, giantSlime);
+                giantSlime.setCustomName(Component.literal("Thuvi' Ejah"));
+                giantSlime.setCustomNameVisible(true);
+                giantSlime.absSnapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
 
-                    level.addFreshEntity(giantSlime);
-                }
+                level.addFreshEntity(giantSlime);
             }
         }
     }
@@ -1309,7 +1306,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
         sendMessageToUser("Mob Pack");
 
         List<EntityType<?>> mobs = BuiltInRegistries.ENTITY_TYPE.stream().filter(
-                type -> type.getCategory() != MobCategory.MISC
+                type -> (type.getCategory() != MobCategory.MISC) && type != EntityTypes.ENDER_DRAGON && type != EntityTypes.WARDEN
         ).toList();
 
         int nextEntity = this.random.nextIntBetweenInclusive(0, mobs.size()-1);
@@ -1331,13 +1328,13 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                     spawnsToPerform-=4;
                     break;
 
-                case "minecraft:ender_dragon", "minecraft:warden":
-                    nextEntity = this.random.nextIntBetweenInclusive(0, mobs.size() - 1);
-                    entityType = mobs.get(nextEntity);
-                    entityTypeID = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-                    entity = entityType.create(level, EntitySpawnReason.EVENT);
-                    spawnsToPerform++;
-                    break;
+//                case "minecraft:ender_dragon", "minecraft:warden":
+//                    nextEntity = this.random.nextIntBetweenInclusive(0, mobs.size() - 1);
+//                    entityType = mobs.get(nextEntity);
+//                    entityTypeID = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+//                    entity = entityType.create(level, EntitySpawnReason.EVENT);
+//                    spawnsToPerform++;
+//                    break;
 
                 case "minecraft:bat", "minecraft:bee", "minecraft:cod", "minecraft:pufferfish", "minecraft:rabbit", "minecraft:salmon", "minecraft:silverfish", "minecraft:endermite", "minecraft:tadpole":
                     Entity entity2 = entityType.create(level, EntitySpawnReason.EVENT);
@@ -1514,6 +1511,9 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
                 boundingBox.inflate(16.0, 8.0, 16.0),
                 EntitySelector.NO_SPECTATORS
         );
+        if (user instanceof Player player && !entities.contains(user)) {
+            entities.add(player);
+        }
 
         for (LivingEntity entity : entities) {
             if (entity instanceof Player player) {
@@ -1595,7 +1595,7 @@ public class ChaosOrbEntity extends ThrowableItemProjectile {
             sendMessageToUser("Armor");
             sendMessageToUser("Tools");
             sendMessageToUser("Chaos");
-            sendMessageToUser("TerrainSphere");
+            sendMessageToUser("VoidSphere");
             sendMessageToUser("Explosion");
             sendMessageToUser("FireExplosion");
             sendMessageToUser("Book");

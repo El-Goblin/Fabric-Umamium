@@ -172,7 +172,6 @@ public class ModBlockLootTableProvider extends FabricBlockLootSubProvider {
                 .setProperties(StatePropertiesPredicate.Builder.properties()
                         .hasProperty(SlabBlock.TYPE, SlabType.DOUBLE));
 
-        // Silk touch: drop the slab block itself — 2 if double, 1 if single
         LootPoolEntryContainer.Builder<?> silkTouchDrop = this.applyExplosionDecay(
                 slab,
                 LootItem.lootTableItem(slab)
@@ -183,7 +182,6 @@ public class ModBlockLootTableProvider extends FabricBlockLootSubProvider {
                         )
         );
 
-        // Single slab, no silk touch: normal probability-gated ore roll
         LootPoolEntryContainer.Builder<?> singleSlabDrop = this.applyExplosionDecay(
                 slab,
                 LootItem.lootTableItem(item)
@@ -194,7 +192,6 @@ public class ModBlockLootTableProvider extends FabricBlockLootSubProvider {
                         .apply(ApplyBonusCount.addOreBonusCount(fortune))
         );
 
-        // Double slab, no silk touch: weighted 25/50/25 split
         LootPoolEntryContainer.Builder<?> doubleSlabNothing = EmptyLootItem.emptyItem()
                 .setWeight(25)
                 .when(this.hasSilkTouch().invert())

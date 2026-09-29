@@ -13,7 +13,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -26,7 +25,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.List;
@@ -155,7 +153,7 @@ public class UmamiumClient implements ClientModInitializer {
 		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
 			attachmentSpritePaths.add(MANUAL_BREATHING);
 		}
-		if (player.hasAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE)) {
+		if (player.hasAttached(ModAttachmentTypes.SCARRED)) {
 			attachmentSpritePaths.add(CUMULATIVE_EXTRA_DAMAGE);
 		}
 		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {
@@ -181,7 +179,7 @@ public class UmamiumClient implements ClientModInitializer {
 		if (player.hasAttached(ModAttachmentTypes.MANUAL_BREATHING)) {
 			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".manual_breathing"));
 		}
-		if (player.hasAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE)) {
+		if (player.hasAttached(ModAttachmentTypes.SCARRED)) {
 			attachmentNames.add(Component.translatable("effect." +  Umamium.MOD_ID + ".cumulative_extra_damage"));
 		}
 		if (player.hasAttached(ModAttachmentTypes.NIGHT_OWL)) {

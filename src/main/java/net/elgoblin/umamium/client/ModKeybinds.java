@@ -50,7 +50,7 @@ public class ModKeybinds {
                 new KeyMapping(
                         "key." + Umamium.MOD_ID +".manual_breathe",
                         InputConstants.Type.KEYSYM,
-                        GLFW.GLFW_KEY_Z,
+                        GLFW.GLFW_KEY_B,
                         LEGENDARY_TOOLS
                 )
         );

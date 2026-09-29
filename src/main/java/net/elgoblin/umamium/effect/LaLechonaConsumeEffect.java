@@ -41,7 +41,7 @@ public record LaLechonaConsumeEffect() implements ConsumeEffect {
         entity.removeAttached(ModAttachmentTypes.MISSCLICK);
         entity.removeAttached(ModAttachmentTypes.MANUAL_BREATHING);
         entity.setAirSupply(entity.getMaxAirSupply());
-        entity.removeAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE);
+        entity.removeAttached(ModAttachmentTypes.SCARRED);
         return entity.removeAllEffects();
     }
 

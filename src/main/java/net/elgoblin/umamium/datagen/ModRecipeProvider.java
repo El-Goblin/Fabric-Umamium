@@ -69,6 +69,14 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy(getHasName(ModItems.MOSS), has(ModItems.MOSS))
                         .save(output);
 
+                shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.NETHER_BRICK_FENCE_GATE, 2)
+                        .pattern("B#B")
+                        .pattern("B#B")
+                        .define('#', Blocks.NETHER_BRICKS)
+                        .define('B', Items.NETHER_BRICK)
+                        .unlockedBy(getHasName(Blocks.DARK_PRISMARINE), has(Blocks.DARK_PRISMARINE))
+                        .save(output);
+
                 shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_PRISMARINE_WALL, 12)
                         .pattern("###")
                         .pattern("###")

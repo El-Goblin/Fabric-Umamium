@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": "minecraft:nether_bricks",
+    "B": "minecraft:nether_brick"
+  },
+  "pattern": [
+    "B#B",
+    "B#B"
+  ],
+  "result": {
+    "count": 2,
+    "id": "umamium:nether_brick_fence_gate"
+  }
+}

@@ -70,9 +70,9 @@ public class ModAttachmentTypes {
                             )
             );
 
-    public static final AttachmentType<Integer> CUMULATIVE_EXTRA_DAMAGE =
+    public static final AttachmentType<Integer> SCARRED =
             AttachmentRegistry.create(
-                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "cumulative_extra_damage"),
+                    Identifier.fromNamespaceAndPath(Umamium.MOD_ID, "scarred"),
                     builder -> builder
                             .persistent(Codec.INT)
                             .syncWith(

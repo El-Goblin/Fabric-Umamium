@@ -20,11 +20,8 @@ import net.elgoblin.umamium.util.ModLootTableModifiers;
 import net.elgoblin.umamium.util.SnowGolemLifetimes;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.entity.event.v1.effect.ServerMobEffectEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.ItemEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,10 +29,8 @@ import net.minecraft.resources.Identifier;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.golem.SnowGolem;
@@ -43,11 +38,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,13 +178,13 @@ public class Umamium implements ModInitializer {
 				}
 			}
 			if (entity instanceof Player player) {
-				if (player.hasAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE)) {
+				if (player.hasAttached(ModAttachmentTypes.SCARRED)) {
 					DamageSource newSource = serverLevel.damageSources().generic();
-					Integer extraDamage = player.getAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE);
+					Integer extraDamage = player.getAttached(ModAttachmentTypes.SCARRED);
 
 					if (source.typeHolder() != newSource.typeHolder() && extraDamage != null) {
 						entity.hurtServer(serverLevel, newSource, extraDamage);
-						player.setAttached(ModAttachmentTypes.CUMULATIVE_EXTRA_DAMAGE, extraDamage+1);
+						player.setAttached(ModAttachmentTypes.SCARRED, extraDamage+1);
 					}
 				}
 			}
