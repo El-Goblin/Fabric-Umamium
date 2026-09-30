@@ -5,11 +5,14 @@ import net.elgoblin.umamium.item.ModItems;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
@@ -157,6 +160,17 @@ public class ModLootTableModifiers {
                             .add(LootItem.lootTableItem(ModItems.CHAOS_ORB))
                             .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 1.0F)));
 
+
+                    LootPool.Builder jungleLeaves = LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1.0F))
+                            .when(LootItemRandomChanceCondition.randomChance(0.025641F))
+                            .add(LootItem.lootTableItem(Items.JUNGLE_SAPLING));
+
+                    // JUNGLE LEAVES
+
+                    if (key.identifier().equals(Identifier.withDefaultNamespace("blocks/jungle_leaves"))) {
+                        tableBuilder.withPool(jungleLeaves);
+                    }
 
                     // START CHEST
 
