@@ -51,7 +51,7 @@ public class DimensionalPocketItem extends Item {
             if (!safeModeOn) {
                 if (!level.isClientSide()) {
                     Container container = LegendaryItemUtils.getContainer((ServerLevel) level, clickedPosition);
-                    boolean linked = LegendaryItemUtils.linkOrUnlinkContainer(context, clickedPosition, blockEntity);
+                    boolean linked = LegendaryItemUtils.linkOrUnlinkContainer(context, clickedPosition);
                     initializeOrRemoveColoredGroups(dimensionalPocket, container, linked);
                     return linked ? InteractionResult.SUCCESS : InteractionResult.FAIL;
                 }

@@ -22,9 +22,7 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +56,9 @@ public class LegendaryItemUtils {
         }
     }
 
-    public static boolean linkOrUnlinkContainer(UseOnContext context, BlockPos position, BlockEntity blockEntity) {
+    public static boolean linkOrUnlinkContainer(UseOnContext context, BlockPos position) {
 
-        if (context.getLevel().getBlockEntity(position) instanceof Container) {
+        if (context.getLevel().getBlockEntity(position) instanceof Container container) {
             ItemStack itemStack = context.getItemInHand();
             if (!itemStack.is(ModItems.DIMENSIONAL_POCKET) && ModEnchantments.getLevel(itemStack, ModEnchantments.LINKER) <= 0) {
                 return false;
@@ -85,8 +83,8 @@ public class LegendaryItemUtils {
                 itemStack.set(ModDataComponentTypes.LINKED_CHEST, position);
                 itemStack.set(ModDataComponentTypes.SERVERWORLD, context.getLevel().dimension().identifier());
                 itemStack.remove(ModDataComponentTypes.CHEST_NAME);
-                if (blockEntity instanceof Nameable nameable && nameable.hasCustomName()) {
-                    @Nullable Component name = nameable.getCustomName();
+                if (container instanceof Nameable nameable && nameable.hasCustomName()) {
+                    Component name = nameable.getCustomName();
                     if (name != null) {
                         itemStack.set(ModDataComponentTypes.CHEST_NAME, name.getString());
                     }

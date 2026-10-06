@@ -38,6 +38,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
@@ -111,20 +114,37 @@ public class Umamium implements ModInitializer {
 			Collections.shuffle(directions, new Random(seed));
 
 			for (Direction face : directions) {
-				BlockPos position = context.getClickedPos().relative(context.getClickedFace());
 
-				if (!context.getLevel().getBlockState(position.relative(face)).canBeReplaced()) {
+				BlockPos originalPos = context.getClickedPos();
+				BlockPos targetPos = originalPos.relative(context.getClickedFace()).relative(face);
+
+				Vec3 offset = Vec3.atLowerCornerOf(targetPos.subtract(originalPos));
+
+				BlockHitResult newHitResult = new BlockHitResult(
+						context.getClickLocation().add(offset),
+						context.getClickedFace(),
+						targetPos,
+						context.isInside()
+				);
+				BlockPlaceContext placeContext = new BlockPlaceContext(player, context.getHand(), stack, newHitResult);
+
+				BlockState targetState = context.getLevel().getBlockState(targetPos);
+
+				if (!targetState.canBeReplaced() && !placeContext.replacingClickedOnBlock()) {
 					continue;
 				}
 
-				BlockHitResult newHitResult = new BlockHitResult(
-						Vec3.atCenterOf(position),
-						face,
-						position.relative(face),
-						context.isInside()
-				);
+				if (targetState.getBlock() instanceof SlabBlock && blockItem.getBlock() instanceof SlabBlock) {
+					BlockState originalState = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(context));
+					if (originalState != null) {
+						SlabType currentType = targetState.getValue(SlabBlock.TYPE);
+						SlabType toPlaceType = originalState.getValue(SlabBlock.TYPE);
+						if (currentType == toPlaceType) {
+							continue;
+						}
+					}
+				}
 
-				BlockPlaceContext placeContext = new BlockPlaceContext(player, context.getHand(), stack, newHitResult);
 				InteractionResult result = blockItem.place(placeContext);
 
 				if (result.consumesAction()) {

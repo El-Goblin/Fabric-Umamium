@@ -24,15 +24,16 @@ public class LegendaryShovelItem extends ShovelItem {
     public InteractionResult useOn(UseOnContext context) {
         BlockPos position = context.getClickedPos();
 
-        if (!context.getLevel().isClientSide()) {
-            BlockEntity blockEntity = context.getLevel().getBlockEntity(position);
-            boolean linked = LegendaryItemUtils.linkOrUnlinkContainer(context, position, blockEntity);
-            return linked ? InteractionResult.SUCCESS : InteractionResult.FAIL;
-        }
-
-        if (context.getLevel().getBlockEntity(position) instanceof Container inventory) {
+        if (context.getLevel().getBlockEntity(position) instanceof Container) {
+            if (!context.getLevel().isClientSide()) {
+                if (LegendaryItemUtils.linkOrUnlinkContainer(context, position)) {
+                    return InteractionResult.SUCCESS;
+                }
+                return InteractionResult.FAIL;
+            }
             return InteractionResult.PASS;
         }
+
         return super.useOn(context);
     }
 
