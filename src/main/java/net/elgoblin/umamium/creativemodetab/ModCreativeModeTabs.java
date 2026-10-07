@@ -115,6 +115,8 @@ public static final CreativeModeTab ITEMS_TAB = Registry.register(BuiltInRegistr
                     .title(Component.translatable("creativemodetab." + Umamium.MOD_ID + ".items_tab"))
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.MOSS);
+                        output.accept(ModItems.LA_LECHONA);
+                        output.accept(ModItems.NETHERITE_NUGGET);
                         output.accept(ModItems.FLASH);
                         output.accept(ModItems.LEGENDARY_PICKAXE);
                         output.accept(ModItems.LEGENDARY_SHOVEL);
@@ -137,10 +139,9 @@ public static final CreativeModeTab ITEMS_TAB = Registry.register(BuiltInRegistr
                         output.accept(ModItems.MAGIC_MIRROR);
                         output.accept(ModItems.MEMORY_MIRROR);
                         output.accept(ModItems.CHAOS_MIRROR);
+                        output.accept(ModItems.POKEBALL);
                         output.accept(ModItems.DIMENSIONAL_POCKET);
                         output.accept(ModItems.CHAOS_ORB);
-                        output.accept(ModItems.LA_LECHONA);
-                        output.accept(ModItems.NETHERITE_NUGGET);
                     })
                     .build()
     );

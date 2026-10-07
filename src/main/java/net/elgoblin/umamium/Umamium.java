@@ -157,7 +157,9 @@ public class Umamium implements ModInitializer {
 
 	private static boolean applyAllowDeathEvents(LivingEntity entity, DamageSource source, float v) {
 		if (source.getEntity() instanceof Player player) {
-			player.heal(v/4);
+			if (source.getWeaponItem() != null && source.getWeaponItem().is(ModItems.FIENDBLADE_LONGSWORD)) {
+				player.heal(v/4);
+			}
 		}
 		return true;
 	}
