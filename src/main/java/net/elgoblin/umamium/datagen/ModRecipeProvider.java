@@ -58,6 +58,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy(getHasName(ModItems.MEMORY_MIRROR), has(ModItems.MEMORY_MIRROR))
                         .save(output);
 
+
+                shapeless(RecipeCategory.MISC, Items.CLAY_BALL, 4)
+                        .requires(Blocks.CLAY)
+                        .unlockedBy(getHasName(Blocks.CLAY), has(Blocks.CLAY))
+                        .save(output);
                 shapeless(RecipeCategory.MISC, ModItems.MOSS, 4)
                         .requires(Blocks.MOSS_BLOCK)
                         .unlockedBy(getHasName(Blocks.MOSS_BLOCK), has(Blocks.MOSS_BLOCK))

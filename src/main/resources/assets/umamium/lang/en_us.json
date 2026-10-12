@@ -541,5 +541,6 @@
   "gamerule.umamium.pokeball_can_capture_ender_dragon": "Pokeball can capture the Ender Dragon",
   "gamerule.umamium.pokeball_can_capture_players": "Pokeball can capture other players",
   "gamerule.umamium.pokeball_can_capture_non_living_entities": "Pokeball can capture non living entities",
-  "gamerule.umamium.pokeball_can_capture_non_living_entities.description": "Allows pokeballs to capture other types of entities such as end crystals, item frames and others."
+  "gamerule.umamium.pokeball_can_capture_non_living_entities.description": "Allows pokeballs to capture other types of entities such as end crystals, item frames and others.",
+  "umamium.sleep.skipping_day": "Sleeping through the day"
 }

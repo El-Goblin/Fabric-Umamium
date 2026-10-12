@@ -123,8 +123,8 @@ public static final CreativeModeTab ITEMS_TAB = Registry.register(BuiltInRegistr
                         output.accept(ModItems.LEGENDARY_AXE);
                         output.accept(ModItems.LEGENDARY_HOE);
                         output.accept(ModItems.LEGENDARY_SWORD);
-                        output.accept(ModItems.LEGENDARY_LONGSWORD);
                         output.accept(ModItems.LEGENDARY_SPEAR);
+                        output.accept(ModItems.LEGENDARY_LONGSWORD);
                         output.accept(ModItems.WOODEN_LONGSWORD);
                         output.accept(ModItems.STONE_LONGSWORD);
                         output.accept(ModItems.COPPER_LONGSWORD);

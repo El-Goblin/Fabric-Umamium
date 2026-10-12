@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,6 +45,7 @@ public class DimensionalPocketItem extends Item {
 
         ItemStack dimensionalPocket = context.getItemInHand();
         boolean safeModeOn = dimensionalPocket.getOrDefault(ModDataComponentTypes.SAFE_MODE, false);
+        boolean randomModeOn = dimensionalPocket.getOrDefault(ModDataComponentTypes.RANDOM_MODE, false);
         BlockPos clickedPosition = context.getClickedPos();
         BlockEntity blockEntity = level.getBlockEntity(clickedPosition);
 
@@ -72,7 +74,11 @@ public class DimensionalPocketItem extends Item {
         ItemStack stackToUse = getStackToUse(dimensionalPocket, level, user, safeModeOn);
         if (isBannedItem(stackToUse)) { return InteractionResult.FAIL; }
 
-        return useStackOn(stackToUse, context, clickedPosition, level, user);
+        InteractionResult result = useStackOn(stackToUse, context, clickedPosition, level, user);
+        if (safeModeOn && randomModeOn && result.consumesAction()) {
+            randomizeSelectedStack(level, dimensionalPocket);
+        }
+        return result;
     }
 
     @Override
@@ -80,6 +86,7 @@ public class DimensionalPocketItem extends Item {
 
         ItemStack dimensionalPocket = player.getItemInHand(hand);
         boolean safeModeOn = dimensionalPocket.getOrDefault(ModDataComponentTypes.SAFE_MODE, false);
+        boolean randomModeOn = dimensionalPocket.getOrDefault(ModDataComponentTypes.RANDOM_MODE, false);
         ItemStack copy = dimensionalPocket.copy();
 
         if (level.isClientSide()) {
@@ -106,6 +113,9 @@ public class DimensionalPocketItem extends Item {
 
         player.setItemSlot(hand.asEquipmentSlot(), copy);
         if (result.consumesAction()) {
+            if (safeModeOn && randomModeOn) {
+                randomizeSelectedStack(level, dimensionalPocket);
+            }
             return InteractionResult.SUCCESS;
         }
         else {
@@ -267,6 +277,37 @@ public class DimensionalPocketItem extends Item {
         if (index >= deposit.getContainerSize()) { return ItemStack.EMPTY; }
 
         return deposit.getItem(index);
+    }
+
+    private void randomizeSelectedStack(Level level, ItemStack dimensionalPocket) {
+        Integer selectedColoredGroup = dimensionalPocket.get(ModDataComponentTypes.SELECTED_COLORED_GROUP);
+        Container deposit = LegendaryItemUtils.getContainer(dimensionalPocket, level);
+
+        if (selectedColoredGroup == null || deposit == null) { return; }
+
+        List<Integer> group = dimensionalPocket.get(ModDataComponentTypes.COLOR_INVENTORIES.get(DyeColor.byId(selectedColoredGroup)));
+        if (group == null) { return; }
+        List<Integer> nonEmptyGroupValues = new ArrayList<>();
+
+
+        for (int i = 0 ; i < group.size() ; i++) {
+            Integer depositIndex = group.get(i);
+            if (!isOffBounds(depositIndex, deposit.getContainerSize())) {
+                ItemStack stack = deposit.getItem(depositIndex);
+                if (!stack.isEmpty()) {
+                    nonEmptyGroupValues.add(i);
+                }
+            }
+        }
+
+        List<Integer> selectedItemInColoredGroups = dimensionalPocket.get(ModDataComponentTypes.SELECTED_ITEM_IN_EACH_COLORED_GROUP);
+        if (selectedItemInColoredGroups == null) { return; }
+
+        int randomizedStack = nonEmptyGroupValues.get(RandomSource.create().nextIntBetweenInclusive(0, nonEmptyGroupValues.size() - 1));
+
+        List<Integer> newIntraGroupPointers = new ArrayList<>(selectedItemInColoredGroups);
+        newIntraGroupPointers.set(selectedColoredGroup, randomizedStack);
+        dimensionalPocket.set(ModDataComponentTypes.SELECTED_ITEM_IN_EACH_COLORED_GROUP, newIntraGroupPointers);
     }
 
     @Override

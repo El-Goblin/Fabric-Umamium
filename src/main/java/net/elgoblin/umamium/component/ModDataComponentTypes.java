@@ -40,6 +40,7 @@ public class ModDataComponentTypes {
     public static final DataComponentType<List<Integer>> SELECTED_ITEM_IN_EACH_COLORED_GROUP = register("selected_item_in_each_colored_group", builder -> builder.persistent(Codec.INT.listOf()));
 
     public static final DataComponentType<Boolean> SAFE_MODE = register("safe_mode", builder -> builder.persistent(Codec.BOOL));
+    public static final DataComponentType<Boolean> RANDOM_MODE = register("random_mode", builder -> builder.persistent(Codec.BOOL));
 
     public static final Map<DyeColor, DataComponentType<List<Integer>>> COLOR_INVENTORIES = new EnumMap<>(DyeColor.class);
 

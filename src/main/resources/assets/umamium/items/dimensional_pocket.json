@@ -1,22 +1,37 @@
 {
   "model": {
     "type": "composite",
-      "models": [
-        {
-          "type": "special",
-          "base": "umamium:item/dimensional_pocket/open/dimensional_pocket_open_base",
-          "model": {
-            "type": "umamium:dimensional_pocket"
-          }
+    "models": [
+      {
+        "type": "special",
+        "base": "umamium:item/dimensional_pocket/open/dimensional_pocket_open_base",
+        "model": {
+          "type": "umamium:dimensional_pocket"
+        }
+      },
+      {
+        "type": "condition",
+        "property": "minecraft:has_component",
+        "component": "umamium:random_mode",
+        "value": true,
+        "on_true": {
+          "type": "model",
+          "model": "umamium:item/dimensional_pocket/open/dimensional_pocket_random"
         },
-        {
+        "on_false": {
           "type": "condition",
           "property": "minecraft:has_component",
           "component": "umamium:safe_mode",
           "value": true,
-          "on_true": {"type": "model", "model": "umamium:item/dimensional_pocket/open/dimensional_pocket_lock"},
-          "on_false": {"type": "minecraft:empty"}
+          "on_true": {
+            "type": "model",
+            "model": "umamium:item/dimensional_pocket/open/dimensional_pocket_lock"
+          },
+          "on_false": {
+            "type": "minecraft:empty"
+          }
         }
+      }
     ]
   }
 }

@@ -1,14 +1,21 @@
 package net.elgoblin.umamium.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.elgoblin.umamium.enchantment.ModEnchantments;
+import net.elgoblin.umamium.item.ModItems;
 import net.elgoblin.umamium.tags.ModTags;
 import net.elgoblin.umamium.util.LegendaryItemUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -60,6 +67,20 @@ public abstract class EntityMixin implements LegendaryItemUtils.KillerToolSaver{
             if (remainderCount < itemStack.getCount()) {
                 itemStack.setCount(remainderCount);
             }
+        }
+    }
+
+    @Inject(
+            method = "isSteppingCarefully",
+            at = @At(
+                    value = "TAIL"
+            ),
+            cancellable = true)
+    private void isUsingLeatherBoots(CallbackInfoReturnable<Boolean> cir) {
+        Entity entity = (Entity) (Object) this;
+
+        if (entity instanceof Player player && player.getItemBySlot(EquipmentSlot.FEET).is(Items.LEATHER_BOOTS)) {
+            cir.setReturnValue(true);
         }
     }
 }

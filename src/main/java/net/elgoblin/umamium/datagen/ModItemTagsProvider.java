@@ -9,6 +9,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
@@ -29,6 +30,8 @@ public class ModItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
         tag(ItemTags.SHOVELS).add(ModItems.getResourceKey(ModItems.LEGENDARY_SHOVEL));
         tag(ItemTags.HOES).add(ModItems.getResourceKey(ModItems.LEGENDARY_HOE));
         tag(ItemTags.SPEARS).add(ModItems.getResourceKey(ModItems.LEGENDARY_SPEAR));
+
+        tag(ItemTags.MINING_ENCHANTABLE).add(ModItems.getResourceKey(Items.BRUSH));
 
         tag(ModTags.Items.LEGENDARY_TOOLS)
                 .add(ModItems.getResourceKey(ModItems.LEGENDARY_SWORD))

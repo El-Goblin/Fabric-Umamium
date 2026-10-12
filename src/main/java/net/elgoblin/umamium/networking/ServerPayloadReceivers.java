@@ -64,8 +64,13 @@ public class ServerPayloadReceivers {
                         }
                         if (mainHandItem.is(ModItems.DIMENSIONAL_POCKET)) {
                             boolean currentSafeMode = mainHandItem.getOrDefault(ModDataComponentTypes.SAFE_MODE, false);
-                            if (currentSafeMode) {
+                            boolean currentRandomMode = mainHandItem.getOrDefault(ModDataComponentTypes.RANDOM_MODE, false);
+                            if (currentRandomMode) {
                                 mainHandItem.remove(ModDataComponentTypes.SAFE_MODE);
+                                mainHandItem.remove(ModDataComponentTypes.RANDOM_MODE);
+                            }
+                            else if (currentSafeMode){
+                                mainHandItem.set(ModDataComponentTypes.RANDOM_MODE, true);
                             }
                             else {
                                 mainHandItem.set(ModDataComponentTypes.SAFE_MODE, true);
@@ -75,8 +80,13 @@ public class ServerPayloadReceivers {
                             ItemStack offHandItem = player.getOffhandItem();
                             if (offHandItem.is(ModItems.DIMENSIONAL_POCKET)) {
                                 boolean currentSafeMode = offHandItem.getOrDefault(ModDataComponentTypes.SAFE_MODE, false);
-                                if (currentSafeMode) {
+                                boolean currentRandomMode = offHandItem.getOrDefault(ModDataComponentTypes.RANDOM_MODE, false);
+                                if (currentRandomMode) {
                                     offHandItem.remove(ModDataComponentTypes.SAFE_MODE);
+                                    offHandItem.remove(ModDataComponentTypes.RANDOM_MODE);
+                                }
+                                else if (currentSafeMode){
+                                    offHandItem.set(ModDataComponentTypes.RANDOM_MODE, true);
                                 }
                                 else {
                                     offHandItem.set(ModDataComponentTypes.SAFE_MODE, true);

@@ -1,0 +1,34 @@
+{
+  "parent": "item/handheld",
+  "display": {
+    "gui": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ -10.9, 10.9, 0 ],
+      "scale": [ 1, 1, 1 ]
+    },
+    "fixed": {
+      "scale": [ 0, 0, 0 ]
+    },
+    "on_shelf": {
+      "scale": [ 0, 0, 0 ]
+    },
+    "firstperson_righthand": {
+      "scale": [ 0, 0, 0 ]
+    },
+    "firstperson_lefthand": {
+      "scale": [ 0, 0, 0 ]
+    },
+    "thirdperson_righthand": {
+      "scale": [ 0, 0, 0 ]
+    },
+    "thirdperson_lefthand": {
+      "scale": [ 0, 0, 0 ]
+    },
+    "ground": {
+      "scale": [ 0, 0, 0 ]
+    }
+  },
+  "textures": {
+    "layer0": "umamium:item/dimensional_pocket/open/dimensional_pocket_random"
+  }
+}
